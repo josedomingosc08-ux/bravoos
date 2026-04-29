@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bravoos - Hoodies</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#fff;color:#111}
+:root{--bv-black:#111;--bv-white:#f5f5f0;--bv-red:#c0392b;--bv-gray:#888}
+.bv-nav{background:var(--bv-black);color:var(--bv-white);display:flex;justify-content:space-between;align-items:center;padding:14px 28px;position:sticky;top:0;z-index:100}
+.bv-logo{font-size:22px;font-weight:500;letter-spacing:4px;color:var(--bv-white);text-decoration:none}
+.bv-logo span{color:var(--bv-red)}
+.bv-nav-links{display:flex;gap:20px}
+.bv-nav-links a{color:var(--bv-white);text-decoration:none;font-size:13px;opacity:.8;cursor:pointer}
+.bv-nav-links a:hover{opacity:1}
+.bv-cart-btn{background:var(--bv-red);color:#fff;border:none;padding:8px 16px;border-radius:4px;font-size:13px;cursor:pointer}
+.bv-hero{background:var(--bv-black);color:var(--bv-white);padding:80px 28px 60px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap}
+.bv-hero-text{max-width:480px}
+.bv-hero-tag{font-size:12px;letter-spacing:3px;color:var(--bv-red);margin-bottom:16px}
+.bv-hero h1{font-size:48px;font-weight:500;line-height:1.1;letter-spacing:2px;margin-bottom:20px;color:#ffffff}
+.bv-hero p{font-size:15px;opacity:.7;line-height:1.7;margin-bottom:32px;max-width:360px}
+.bv-cta{background:var(--bv-red);color:#fff;border:none;padding:14px 32px;font-size:15px;border-radius:4px;cursor:pointer;letter-spacing:1px}
+.bv-cta:hover{background:#a93226}
+.bv-hero-img{width:280px;height:320px;background:#222;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bv-section{padding:56px 28px}
+.bv-section-title{font-size:13px;letter-spacing:3px;color:var(--bv-gray);margin-bottom:8px}
+.bv-section h2{font-size:28px;font-weight:500;margin-bottom:32px}
+.bv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.bv-card{border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .15s}
+.bv-card:hover{transform:translateY(-3px)}
+.bv-card-img{height:200px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;position:relative}
+.bv-badge{position:absolute;top:10px;left:10px;background:var(--bv-red);color:#fff;font-size:11px;padding:3px 8px;border-radius:3px}
+.bv-card-body{padding:14px}
+.bv-card-name{font-size:14px;font-weight:500;margin-bottom:4px}
+.bv-card-sub{font-size:12px;color:#888;margin-bottom:10px}
+.bv-card-footer{display:flex;justify-content:space-between;align-items:center}
+.bv-price{font-size:16px;font-weight:500}
+.bv-add{background:var(--bv-black);color:#fff;border:none;padding:7px 14px;border-radius:4px;font-size:12px;cursor:pointer}
+.bv-add:hover{background:#333}
+.bv-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center}
+.bv-modal-bg.open{display:flex}
+.bv-modal{background:#fff;border-radius:12px;padding:28px;width:520px;max-width:95vw;position:relative;max-height:90vh;overflow-y:auto}
+.bv-modal-close{position:absolute;top:14px;right:18px;background:none;border:none;font-size:20px;cursor:pointer;color:#888}
+.bv-modal-inner{display:flex;gap:24px;flex-wrap:wrap}
+.bv-modal-img{width:160px;height:180px;background:#f5f5f5;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.bv-modal-info{flex:1;min-width:200px}
+.bv-modal-info h3{font-size:20px;font-weight:500;margin-bottom:6px}
+.bv-modal-price{font-size:22px;font-weight:500;margin-bottom:16px;color:var(--bv-red)}
+.bv-label{font-size:12px;color:#888;margin-bottom:8px;letter-spacing:1px}
+.bv-sizes{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.bv-size{border:1px solid #ccc;border-radius:4px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer}
+.bv-size.sel{background:var(--bv-black);color:#fff;border-color:var(--bv-black)}
+.bv-colors{display:flex;gap:8px;margin-bottom:20px}
+.bv-color{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.bv-color.sel{border-color:var(--bv-red)}
+.bv-buy{width:100%;background:var(--bv-red);color:#fff;border:none;padding:13px;border-radius:6px;font-size:15px;cursor:pointer;margin-bottom:10px}
+.bv-buy:hover{background:#a93226}
+.bv-cart-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:flex-start;justify-content:flex-end}
+.bv-cart-modal-bg.open{display:flex}
+.bv-cart-panel{background:#fff;width:340px;height:100vh;padding:24px;overflow-y:auto;display:flex;flex-direction:column}
+.bv-cart-panel h3{font-size:18px;font-weight:500;margin-bottom:20px}
+.bv-cart-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0}
+.bv-ci-img{width:56px;height:64px;background:#f5f5f5;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.bv-ci-info{flex:1}
+.bv-ci-name{font-size:14px;font-weight:500}
+.bv-ci-meta{font-size:12px;color:#888;margin-top:2px}
+.bv-ci-price{font-size:14px;font-weight:500;margin-top:4px}
+.bv-ci-remove{background:none;border:none;color:#888;cursor:pointer;font-size:12px;margin-top:4px}
+.bv-cart-total{margin-top:auto;padding-top:20px}
+.bv-total-row{display:flex;justify-content:space-between;font-size:15px;margin-bottom:16px}
+.bv-checkout-btn{width:100%;background:var(--bv-red);color:#fff;border:none;padding:14px;border-radius:6px;font-size:15px;cursor:pointer}
+.bv-checkout-form{display:none;padding:24px 28px;max-width:600px;margin:0 auto}
+.bv-checkout-form.open{display:block}
+.bv-checkout-form h2{font-size:22px;font-weight:500;margin-bottom:24px}
+.bv-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.bv-form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.bv-form-group label{font-size:12px;color:#888;letter-spacing:1px}
+.bv-form-group input,.bv-form-group select{border:1px solid #ddd;border-radius:6px;padding:10px 12px;font-size:14px}
+.bv-mp-box{border:1px solid #ddd;border-radius:8px;padding:16px;margin:16px 0;display:flex;align-items:center;gap:12px}
+.bv-mp-logo{width:40px;height:40px;background:#009EE3;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:500;flex-shrink:0}
+.bv-mp-text{font-size:13px;color:#666}
+.bv-mp-text strong{color:#111;font-weight:500}
+.bv-confirm-btn{width:100%;background:var(--bv-red);color:#fff;border:none;padding:14px;border-radius:6px;font-size:15px;cursor:pointer;margin-top:8px}
+.bv-back{background:none;border:none;color:#888;cursor:pointer;font-size:13px;margin-bottom:20px;display:flex;align-items:center;gap:6px;padding:0}
+.bv-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:12px 24px;border-radius:6px;font-size:14px;display:none;z-index:500;white-space:nowrap}
+.bv-toast.show{display:block}
+.bv-success{text-align:center;padding:60px 20px;display:none;max-width:400px;margin:0 auto}
+.bv-success.show{display:block}
+.bv-check{width:60px;height:60px;background:#e8f5e9;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.bv-footer{background:var(--bv-black);color:#f5f5f0;padding:40px 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.bv-footer h4{font-size:13px;letter-spacing:2px;margin-bottom:12px;color:var(--bv-red)}
+.bv-footer a{display:block;font-size:13px;opacity:.6;text-decoration:none;color:#f5f5f0;margin-bottom:6px;cursor:pointer}
+.bv-footer a:hover{opacity:1}
+.bv-social{display:flex;gap:10px;margin-top:8px}
+.bv-soc{width:32px;height:32px;border:1px solid rgba(255,255,255,.3);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;color:#f5f5f0;opacity:.7}
+@media(max-width:600px){
+  .bv-hero h1{font-size:32px}
+  .bv-hero-img{display:none}
+  .bv-form-row{grid-template-columns:1fr}
+  .bv-cart-panel{width:100vw}
+}
+</style>
+</head>
+<body>
+
+<nav class="bv-nav">
+  <a class="bv-logo" href="#">BRAV<span>OO</span>S</a>
+  <div class="bv-nav-links">
+    <a onclick="scrollToShop()">Tienda</a>
+    <a onclick="scrollToShop()">Colecciones</a>
+    <a onclick="scrollToAbout()">Nosotros</a>
+  </div>
+  <button class="bv-cart-btn" onclick="openCart()">Carrito (<span id="cart-count">0</span>)</button>
+</nav>
+
+<div id="sec-home">
+  <div class="bv-hero">
+    <div class="bv-hero-text">
+      <div class="bv-hero-tag">NUEVA COLECCIÓN 2025</div>
+      <h1>Estilo que<br>viene del sur.</h1>
+      <p>Polerones con identidad. Calidad y diseño, hecho para tirar facha y elegancia con una sola prenda.</p>
+      <button class="bv-cta" onclick="scrollToShop()">Ver colección</button>
+    </div>
+    <div class="bv-hero-img">
+      <!-- Reemplaza esta imagen con una foto real de tus hoodies -->
+      <svg width="80" height="100" viewBox="0 0 80 100" fill="none">
+        <path d="M20 10 L10 30 L20 32 L20 90 L60 90 L60 32 L70 30 L60 10 L50 5 C48 15 32 15 30 5 Z" stroke="#f5f5f0" stroke-width="2" fill="none"/>
+        <path d="M30 5 C28 12 40 16 40 16 C40 16 52 12 50 5" stroke="#f5f5f0" stroke-width="2" fill="none"/>
+        <ellipse cx="40" cy="32" rx="8" ry="4" stroke="#f5f5f0" stroke-width="1.5" fill="none"/>
+      </svg>
+    </div>
+  </div>
+
+  <div style="background:#f9f9f9;padding:16px 28px">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div style="width:10px;height:10px;background:var(--bv-red);border-radius:50%"></div>
+      <span style="font-size:13px;letter-spacing:2px;color:#888">ENVÍOS A TODO CHILE · PAGO SEGURO · CAMBIOS GRATIS</span>
+    </div>
+  </div>
+
+  <div class="bv-section" id="sec-prods">
+    <div class="bv-section-title">COLECCIÓN</div>
+    <h2>Hoodies Bravoos</h2>
+    <div class="bv-grid" id="products-grid"></div>
+  </div>
+
+  <div class="bv-section" id="sec-about" style="background:#111;color:#f5f5f0;text-align:center">
+    <div class="bv-section-title" style="color:var(--bv-red)">NUESTRA HISTORIA</div>
+    <h2 style="color:#f5f5f0;margin-bottom:16px">Nacimos con ganas de hacer algo propio.</h2>
+    <p style="max-width:540px;margin:0 auto;opacity:.7;line-height:1.8">Bravoos nació de las ganas de hacer algo propio, con la mejor calidad y diseño, hecho para tirar facha y a la vez elegancia con una sola prenda.</p>
+  </div>
+
+  <div class="bv-footer">
+    <div>
+      <div style="font-size:18px;font-weight:500;letter-spacing:4px;color:#f5f5f0;margin-bottom:12px">BRAV<span style="color:var(--bv-red)">OO</span>S</div>
+      <p style="font-size:12px;opacity:.5;max-width:200px">Polerones con identidad. Envíos a todo Chile.</p>
+      <div class="bv-social">
+        <div class="bv-soc">ig</div>
+        <div class="bv-soc">tt</div>
+        <div class="bv-soc">fb</div>
+      </div>
+    </div>
+    <div>
+      <h4>TIENDA</h4>
+      <a onclick="scrollToShop()">Catálogo</a>
+      <a onclick="scrollToShop()">Novedades</a>
+    </div>
+    <div>
+      <h4>AYUDA</h4>
+      <a>Cómo comprar</a>
+      <a>Cambios y devoluciones</a>
+      <a>Preguntas frecuentes</a>
+    </div>
+    <div>
+      <h4>CONTACTO</h4>
+      <!-- Reemplaza con tu correo real -->
+      <a>bravoos@mail.com</a>
+      <a>Instagram @bravoos</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal producto -->
+<div id="product-modal" class="bv-modal-bg" onclick="bgClose(event)">
+  <div class="bv-modal">
+    <button class="bv-modal-close" onclick="closeModal()">✕</button>
+    <div class="bv-modal-inner">
+      <div class="bv-modal-img" id="m-img">
+        <svg width="50" height="65" viewBox="0 0 80 100" fill="none">
+          <path d="M20 10 L10 30 L20 32 L20 90 L60 90 L60 32 L70 30 L60 10 L50 5 C48 15 32 15 30 5 Z" stroke="#888" stroke-width="2" fill="none"/>
+          <ellipse cx="40" cy="32" rx="8" ry="4" stroke="#888" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+      <div class="bv-modal-info">
+        <h3 id="m-name"></h3>
+        <div class="bv-modal-price" id="m-price"></div>
+        <div class="bv-label">TALLA</div>
+        <div class="bv-sizes">
+          <div class="bv-size" onclick="selSize(this)">XS</div>
+          <div class="bv-size sel" onclick="selSize(this)">S</div>
+          <div class="bv-size" onclick="selSize(this)">M</div>
+          <div class="bv-size" onclick="selSize(this)">L</div>
+          <div class="bv-size" onclick="selSize(this)">XL</div>
+        </div>
+        <div class="bv-label">COLOR</div>
+        <div class="bv-colors">
+          <div class="bv-color sel" style="background:#111" onclick="selColor(this)" title="Negro"></div>
+          <div class="bv-color" style="background:#f5f5f0;border:1px solid #ccc" onclick="selColor(this)" title="Blanco"></div>
+          <div class="bv-color" style="background:#c0392b" onclick="selColor(this)" title="Rojo"></div>
+          <div class="bv-color" style="background:#2c3e50" onclick="selColor(this)" title="Navy"></div>
+        </div>
+        <button class="bv-buy" onclick="addToCart()">Agregar al carrito</button>
+        <p style="font-size:12px;color:#888">Envío a todo Chile · Cambio sin costo</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Panel carrito -->
+<div id="cart-panel" class="bv-cart-modal-bg" onclick="bgCloseCart(event)">
+  <div class="bv-cart-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="margin:0">Tu carrito</h3>
+      <button style="background:none;border:none;cursor:pointer;font-size:18px;color:#888" onclick="closeCart()">✕</button>
+    </div>
+    <div id="cart-items"></div>
+    <div class="bv-cart-total" id="cart-footer" style="display:none">
+      <div class="bv-total-row"><span>Subtotal</span><span id="cart-subtotal"></span></div>
+      <div class="bv-total-row" style="font-size:12px;opacity:.6"><span>Envío</span><span>Calculado al pagar</span></div>
+      <button class="bv-checkout-btn" onclick="goCheckout()">Ir a pagar</button>
+    </div>
+    <div id="cart-empty" style="text-align:center;padding:40px 0;color:#888;font-size:14px">Tu carrito está vacío</div>
+  </div>
+</div>
+
+<!-- Checkout -->
+<div id="checkout-section" class="bv-checkout-form">
+  <button class="bv-back" onclick="closeCheckout()">← Volver a la tienda</button>
+  <h2>Finalizar compra</h2>
+  <div class="bv-form-row">
+    <div class="bv-form-group"><label>NOMBRE</label><input type="text" placeholder="Tu nombre"></div>
+    <div class="bv-form-group"><label>APELLIDO</label><input type="text" placeholder="Tu apellido"></div>
+  </div>
+  <div class="bv-form-group"><label>EMAIL</label><input type="email" placeholder="correo@ejemplo.com"></div>
+  <div class="bv-form-group"><label>TELÉFONO</label><input type="tel" placeholder="+56 9 ..."></div>
+  <div class="bv-form-group"><label>DIRECCIÓN</label><input type="text" placeholder="Calle, número, depto"></div>
+  <div class="bv-form-row">
+    <div class="bv-form-group"><label>CIUDAD</label><input type="text" placeholder="Ciudad"></div>
+    <div class="bv-form-group"><label>REGIÓN</label>
+      <select>
+        <option>Región Metropolitana</option>
+        <option>Valparaíso</option>
+        <option>Biobío</option>
+        <option>La Araucanía</option>
+        <option>Los Lagos</option>
+        <option>Coquimbo</option>
+        <option>O'Higgins</option>
+        <option>Maule</option>
+        <option>Antofagasta</option>
+        <option>Atacama</option>
+        <option>Tarapacá</option>
+        <option>Arica y Parinacota</option>
+        <option>Los Ríos</option>
+        <option>Aysén</option>
+        <option>Magallanes</option>
+      </select>
+    </div>
+  </div>
+  <div class="bv-mp-box">
+    <div class="bv-mp-logo">MP</div>
+    <div class="bv-mp-text"><strong>Mercado Pago</strong><br>Pago seguro · Tarjeta, débito o transferencia · Cuotas sin interés</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:16px;font-weight:500;margin:8px 0">
+    <span>Total a pagar</span><span id="checkout-total"></span>
+  </div>
+  <button class="bv-confirm-btn" onclick="confirmOrder()">Pagar con Mercado Pago</button>
+</div>
+
+<!-- Pantalla éxito -->
+<div class="bv-success" id="success-screen">
+  <div class="bv-check">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="#2e7d32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <h2 style="font-size:22px;font-weight:500;margin-bottom:12px">¡Pedido confirmado!</h2>
+  <p style="color:#666;margin-bottom:28px;line-height:1.7">Tu hoodie Bravoos está en camino. Te enviamos el comprobante por email. ¡Gracias por tu compra!</p>
+  <button class="bv-cta" onclick="resetStore()">Seguir comprando</button>
+</div>
+
+<div class="bv-toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   PRODUCTOS — Edita esta lista con tus hoodies reales
+   Cambia: name, sub, price, badge (o déjalo vacío "")
+   ===================================================== */
+const PRODUCTS = [
+  { id:1, name:"Hoodie Bravoos Classic Negro", sub:"Hoodie clásico unisex", price:32990, badge:"" },
+  { id:2, name:"Hoodie Bravoos Classic Blanco", sub:"Hoodie clásico unisex", price:32990, badge:"NUEVO" },
+  { id:3, name:"Hoodie Oversize Negro", sub:"Corte oversize relajado", price:37990, badge:"" },
+  { id:4, name:"Hoodie Oversize Gris", sub:"Corte oversize relajado", price:37990, badge:"NUEVO" },
+  { id:5, name:"Hoodie Rojo Fuego", sub:"Edición limitada", price:36990, badge:"LTD" },
+  { id:6, name:"Hoodie Premium Navy", sub:"Tela reforzada premium", price:42990, badge:"" },
+];
+
+let cart = [], curProduct = null;
+
+function fmt(n){ return "$" + n.toLocaleString("es-CL") }
+
+function renderProducts(){
+  document.getElementById("products-grid").innerHTML = PRODUCTS.map(p => `
+    <div class="bv-card" onclick="openProduct(${p.id})">
+      <div class="bv-card-img">
+        ${p.badge ? `<div class="bv-badge">${p.badge}</div>` : ""}
+        <!-- Para agregar foto real: reemplaza el svg de abajo por <img src="foto-hoodie-${p.id}.jpg" style="width:100%;height:100%;object-fit:cover"> -->
+        <svg width="45" height="58" viewBox="0 0 80 100" fill="none">
+          <path d="M20 10 L10 30 L20 32 L20 90 L60 90 L60 32 L70 30 L60 10 L50 5 C48 15 32 15 30 5 Z" stroke="#999" stroke-width="2" fill="none"/>
+          <ellipse cx="40" cy="32" rx="8" ry="4" stroke="#999" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+      <div class="bv-card-body">
+        <div class="bv-card-name">${p.name}</div>
+        <div class="bv-card-sub">${p.sub}</div>
+        <div class="bv-card-footer">
+          <div class="bv-price">${fmt(p.price)}</div>
+          <button class="bv-add" onclick="event.stopPropagation();quickAdd(${p.id})">+ Agregar</button>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function openProduct(id){
+  curProduct = PRODUCTS.find(p => p.id === id);
+  document.getElementById("m-name").textContent = curProduct.name;
+  document.getElementById("m-price").textContent = fmt(curProduct.price);
+  document.getElementById("product-modal").classList.add("open");
+}
+function closeModal(){ document.getElementById("product-modal").classList.remove("open") }
+function bgClose(e){ if(e.target.id==="product-modal") closeModal() }
+
+function selSize(el){ document.querySelectorAll(".bv-size").forEach(s=>s.classList.remove("sel")); el.classList.add("sel") }
+function selColor(el){ document.querySelectorAll(".bv-color").forEach(c=>c.classList.remove("sel")); el.classList.add("sel") }
+
+function addToCart(){
+  if(!curProduct) return;
+  const sz = document.querySelector(".bv-size.sel")?.textContent || "M";
+  cart.push({...curProduct, size: sz});
+  updateCartCount(); closeModal(); showToast("¡" + curProduct.name + " agregado!");
+}
+function quickAdd(id){
+  const p = PRODUCTS.find(x => x.id === id);
+  cart.push({...p, size:"M"});
+  updateCartCount(); showToast("¡" + p.name + " agregado!");
+}
+function updateCartCount(){ document.getElementById("cart-count").textContent = cart.length }
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function openCart(){ renderCart(); document.getElementById("cart-panel").classList.add("open") }
+function closeCart(){ document.getElementById("cart-panel").classList.remove("open") }
+function bgCloseCart(e){ if(e.target.id==="cart-panel") closeCart() }
+
+function renderCart(){
+  const el = document.getElementById("cart-items");
+  const empty = document.getElementById("cart-empty");
+  const footer = document.getElementById("cart-footer");
+  if(!cart.length){ el.innerHTML=""; empty.style.display="block"; footer.style.display="none"; return; }
+  empty.style.display = "none"; footer.style.display = "block";
+  el.innerHTML = cart.map((item,i) => `
+    <div class="bv-cart-item">
+      <div class="bv-ci-img">
+        <svg width="28" height="35" viewBox="0 0 80 100" fill="none"><path d="M20 10 L10 30 L20 32 L20 90 L60 90 L60 32 L70 30 L60 10 L50 5 C48 15 32 15 30 5 Z" stroke="#999" stroke-width="2" fill="none"/></svg>
+      </div>
+      <div class="bv-ci-info">
+        <div class="bv-ci-name">${item.name}</div>
+        <div class="bv-ci-meta">Talla: ${item.size}</div>
+        <div class="bv-ci-price">${fmt(item.price)}</div>
+        <button class="bv-ci-remove" onclick="removeItem(${i})">Eliminar</button>
+      </div>
+    </div>`).join("");
+  document.getElementById("cart-subtotal").textContent = fmt(cart.reduce((s,i)=>s+i.price,0));
+}
+function removeItem(i){ cart.splice(i,1); updateCartCount(); renderCart() }
+
+function goCheckout(){
+  if(!cart.length) return;
+  closeCart();
+  document.getElementById("sec-home").style.display = "none";
+  document.getElementById("checkout-section").classList.add("open");
+  document.getElementById("checkout-total").textContent = fmt(cart.reduce((s,i)=>s+i.price,0));
+}
+function closeCheckout(){
+  document.getElementById("checkout-section").classList.remove("open");
+  document.getElementById("sec-home").style.display = "block";
+}
+function confirmOrder(){
+  document.getElementById("checkout-section").classList.remove("open");
+  document.getElementById("success-screen").classList.add("show");
+}
+function resetStore(){
+  cart = []; updateCartCount();
+  document.getElementById("success-screen").classList.remove("show");
+  document.getElementById("sec-home").style.display = "block";
+}
+function scrollToShop(){ document.getElementById("sec-prods").scrollIntoView({behavior:"smooth"}) }
+function scrollToAbout(){ document.getElementById("sec-about").scrollIntoView({behavior:"smooth"}) }
+
+renderProducts();
+</script>
+</body>
+</html>
