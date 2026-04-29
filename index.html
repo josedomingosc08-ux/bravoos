@@ -119,7 +119,7 @@ body{font-family:system-ui,sans-serif;background:#fff;color:#111}
     <div class="bv-hero-text">
       <div class="bv-hero-tag">NUEVA COLECCIÓN 2026</div>
       <h1>Estilo que<br>viene del sur.</h1>
-      <p>Polerones con identidad, calidad y diseño, hecho para tirar facha y elegancia con una sola prenda.</p>
+      <p>Polerones con identidad, calidad y diseño, hechos para tirar facha y elegancia con una sola prenda.</p>
       <button class="bv-cta" onclick="scrollToShop()">Ver colección</button>
     </div>
     <div class="bv-hero-img">
@@ -194,7 +194,7 @@ body{font-family:system-ui,sans-serif;background:#fff;color:#111}
       </div>
       <div class="bv-modal-info">
         <h3 id="m-name"></h3>
-        <div class="bv-modal-price" id="m-price"></div>
+        <div id="m-price"></div>
         <div class="bv-label">TALLA</div>
         <div class="bv-sizes">
           <div class="bv-size" onclick="selSize(this)">XS</div>
@@ -295,12 +295,12 @@ body{font-family:system-ui,sans-serif;background:#fff;color:#111}
    Cambia: name, sub, price, badge (o déjalo vacío "")
    ===================================================== */
 const PRODUCTS = [
-  { id:1, name:"Hoodie Bravoos Classic Negro", sub:"Hoodie clásico unisex", price:44990, badge:"" },
-  { id:2, name:"Hoodie Bravoos Classic Blanco", sub:"Hoodie clásico unisex", price:44990, badge:"NUEVO" },
-  { id:3, name:"Hoodie Oversize Negro", sub:"Corte oversize relajado", price:44990, badge:"" },
-  { id:4, name:"Hoodie Oversize Gris", sub:"Corte oversize relajado", price:44990, badge:"NUEVO" },
-  { id:5, name:"Hoodie Rojo Fuego", sub:"Edición limitada", price:44990, badge:"LTD" },
-  { id:6, name:"Hoodie Premium Navy", sub:"Tela reforzada premium", price:44990, badge:"" },
+  { id:1, name:"Hoodie Bravoos Classic Negro", sub:"Hoodie clásico unisex", price:34990, oldPrice:44990, badge:"OFERTA" },
+  { id:2, name:"Hoodie Bravoos Classic Blanco", sub:"Hoodie clásico unisex", price:34990, oldPrice:44990, badge:"OFERTA" },
+  { id:3, name:"Hoodie Oversize Negro", sub:"Corte oversize relajado", price:34990, oldPrice:44990, badge:"OFERTA" },
+  { id:4, name:"Hoodie Oversize Gris", sub:"Corte oversize relajado", price:34990, oldPrice:44990, badge:"OFERTA" },
+  { id:5, name:"Hoodie Rojo Fuego", sub:"Edición limitada", price:34990, oldPrice:44990, badge:"LTD" },
+  { id:6, name:"Hoodie Premium Navy", sub:"Tela reforzada premium", price:34990, oldPrice:44990, badge:"OFERTA" },
 ];
 
 let cart = [], curProduct = null;
@@ -322,7 +322,10 @@ function renderProducts(){
         <div class="bv-card-name">${p.name}</div>
         <div class="bv-card-sub">${p.sub}</div>
         <div class="bv-card-footer">
-          <div class="bv-price">${fmt(p.price)}</div>
+          <div>
+            ${p.oldPrice ? `<span style="font-size:12px;color:#999;text-decoration:line-through;margin-right:4px">${fmt(p.oldPrice)}</span>` : ""}
+            <span class="bv-price" style="${p.oldPrice ? "color:#c0392b" : ""}">${fmt(p.price)}</span>
+          </div>
           <button class="bv-add" onclick="event.stopPropagation();quickAdd(${p.id})">+ Agregar</button>
         </div>
       </div>
@@ -332,7 +335,9 @@ function renderProducts(){
 function openProduct(id){
   curProduct = PRODUCTS.find(p => p.id === id);
   document.getElementById("m-name").textContent = curProduct.name;
-  document.getElementById("m-price").textContent = fmt(curProduct.price);
+  document.getElementById("m-price").innerHTML = curProduct.oldPrice
+    ? `<span style="font-size:15px;color:#999;text-decoration:line-through;margin-right:8px">${fmt(curProduct.oldPrice)}</span><span style="font-size:22px;font-weight:500;color:#c0392b">${fmt(curProduct.price)}</span>`
+    : `<span style="font-size:22px;font-weight:500;color:#c0392b">${fmt(curProduct.price)}</span>`;
   document.getElementById("product-modal").classList.add("open");
 }
 function closeModal(){ document.getElementById("product-modal").classList.remove("open") }
